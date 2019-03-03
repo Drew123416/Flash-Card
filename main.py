@@ -91,9 +91,9 @@ def main():
 
         mail.starttls()
 
-        mail.login('drewgadams2016@gmail.com', 'Drew2016')
+        mail.login('youremail', 'your password')
 
-        mail.sendmail('drewgadams2016@gmail.com',thereEmail, message)
+        mail.sendmail('your email',thereEmail, message)
 
         mail.close()
 
