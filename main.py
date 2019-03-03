@@ -1,5 +1,6 @@
 # 1 Introduce what this program is and how it works
 import os
+import smtplib
 from io import BytesIO
 import requests
 from docx import Document
@@ -29,13 +30,14 @@ def main():
 
         header = document.add_heading(title + "\n")
         
-
+        # Appending data to the .docx file
         sections = document.sections
         section = sections[0]
         section.page_width = Inches(5)
         body = input("line: ")
         paragraph = document.add_paragraph(body + "\n")
         paragraph.style = 'List Bullet'
+        # Gives the bullet point functionality
         def line():
             body = input("line: ")
             paragraph = document.add_paragraph(body + "\n")
@@ -47,7 +49,7 @@ def main():
 
         addImg = input("Add image yes/no: ")
         
-
+        # asks if you want an image each flash card
         if addImg.casefold() == "yes":
             image = input("Image url: ")
             response = requests.get(image)  # no need to add stream=True
@@ -57,6 +59,7 @@ def main():
         else:
             print("Okay") 
             time.sleep(.3)
+            # saves the document
             document.save(name + ".docx")
 
            
@@ -69,13 +72,35 @@ def main():
     while another.casefold() == "yes":
         main()
     else:
+        # Does all of the email stuff
+        thereEmail = input("Your Email: ")
+
+        subject = "Flash Cards"
+        # grammar checks
+        if amount == 1:
+            msg = f"Thanks for creating {amount} flashcard with the Flash Card Creator \n Made by: Flash Card Creator"
+        else: 
+            msg = f"Thanks for creating {amount} flashcards with the Flash Card Creator \n Made by: Flash Card Creator"
+            
+                
+        message = 'Subject: {}\n\n{}'.format(subject, msg)
+
+        mail = smtplib.SMTP('smtp.gmail.com',587)
+
+        mail.ehlo()
+
+        mail.starttls()
+
+        mail.login('drewgadams2016@gmail.com', 'Drew2016')
+
+        mail.sendmail('drewgadams2016@gmail.com',thereEmail, message)
+
+        mail.close()
+
         print("Thanks so much for using Flash Card Creator!")
         time.sleep(1)
         exit()  
     
-    os.startfile(name + '.docx', 'print')
-
-
 # 5 Thank them for using your program 
 
 if __name__ == "__main__":
