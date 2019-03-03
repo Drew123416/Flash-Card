@@ -1,4 +1,5 @@
 # 1 Introduce what this program is and how it works
+import os
 from io import BytesIO
 import requests
 from docx import Document
@@ -11,8 +12,8 @@ def main():
     time.sleep(.6)
     print("Please fill out the info....")
     name = input("Name of file: ")
-    f = open(name + ".docx", "w")
-    a = open(name + ".docx" , "rb")
+    file = open(name + ".docx", "w")
+    append = open(name + ".docx" , "rb")
     document = Document()
     # 2 Then ask the user how many flash cards they would like to create
     amount = int(input("How many flash cards: "))
@@ -24,7 +25,7 @@ def main():
     # 3 Then have them fill each one out
     while times < amount:
         times += 1
-        title = input("Title of " + str(flashCardNum) + " card: " )
+        title = input(f"Title of {flashCardNum} card: " )
 
         header = document.add_heading(title + "\n")
         
@@ -40,14 +41,14 @@ def main():
             paragraph = document.add_paragraph(body + "\n")
             paragraph.style = 'List Bullet'
         addLine = input("Add another line yes/no: ")
-        while addLine == "yes" or addLine == "Yes":
+        while addLine.casefold() == "yes":
             line()
             addLine = input("Add another line yes/no: ")
 
         addImg = input("Add image yes/no: ")
         
 
-        if addImg == "yes" or addImg == "Yes":
+        if addImg.casefold() == "yes":
             image = input("Image url: ")
             response = requests.get(image)  # no need to add stream=True
             binary_img = BytesIO(response.content) 
@@ -62,16 +63,17 @@ def main():
         flashCardNum += 1
         # 4 Finally save all of that data to a text file so they can print it out
         
-    a.close()
+    append.close()
     
     another = input("Would you like to make another set yes/no: ")
-    if another == "yes" or another == "Yes":
+    while another.casefold() == "yes":
         main()
     else:
         print("Thanks so much for using Flash Card Creator!")
         time.sleep(1)
         exit()  
-        
+    
+    os.startfile(name + '.docx', 'print')
 
 
 # 5 Thank them for using your program 
